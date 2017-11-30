@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 /**
  * Created by bobyk on 11/28/17.
@@ -23,15 +24,13 @@ public class UserService {
     private UserDAOImpl userDAOImpl;
 
     @GET
-    @Path("/{param}")
-    public Response getMsg(@PathParam("param") String msg) {
-        if (getUserDAOImpl() != null) {
-            msg = ":)";
-        } else {
-            msg = ":(";
-        }
-        String output = "Jersey say : " + msg;
-        return Response.status(200).entity(output).build();
+    @Path("/list")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserList() throws Exception{
+        Response response = null;
+        List<User> users = userDAOImpl.getUserList();
+        response = Response.status(200).entity(users).build();
+        return response;
     }
 
     @POST
@@ -39,14 +38,39 @@ public class UserService {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createUser(User user) throws Exception{
         Response response = null;
+        userDAOImpl.createUser(user);
+        response = Response.status(200).entity(user).build();
         return response;
     }
 
-//    public void setUserDAOImpl(UserDAOImpl userDAOImpl) {
-//        this.userDAOImpl = userDAOImpl;
-//    }
-
-    public UserDAOImpl getUserDAOImpl() {
-        return userDAOImpl;
+    @DELETE
+    @Path("/id/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response deleteUserByID(@PathParam("id") String id) throws Exception {
+        Response response = null;
+        userDAOImpl.deleteUserByID(Long.valueOf(id));
+        response = Response.status(200).build();
+        return response;
     }
+
+    @DELETE
+    @Path("/username/{username}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response deleteUserByUsername(@PathParam("username") String username) throws Exception {
+        Response response = null;
+        userDAOImpl.deleteUserByUsername(username);
+        response = Response.status(200).build();
+        return response;
+    }
+
+    @GET
+    @Path("/check")
+    public Response check() {
+        String msg = ":(";
+        if (userDAOImpl != null) {
+            msg = ":)";
+        }
+        return Response.status(200).entity(msg).build();
+    }
+
 }
