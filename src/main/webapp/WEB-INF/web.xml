@@ -7,13 +7,29 @@
     <display-name>Bank API</display-name>
 
     <servlet>
-        <servlet-name>JerseyServlet</servlet-name>
+        <servlet-name>jersey-servlet</servlet-name>
         <servlet-class>com.bank.servlets.JerseyServlet</servlet-class>
+        <init-param>
+            <param-name>jersey.config.server.provider.packages</param-name>
+            <param-value>com.bank</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>JerseyServlet</servlet-name>
-        <url-pattern>/Rest/*</url-pattern>
+        <servlet-name>jersey-servlet</servlet-name>
+        <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
+
+    <listener>
+        <listener-class>
+            org.springframework.web.context.ContextLoaderListener
+        </listener-class>
+    </listener>
+
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/beans.xml</param-value>
+    </context-param>
 
 </web-app>
