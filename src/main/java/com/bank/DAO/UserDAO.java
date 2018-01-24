@@ -12,4 +12,5 @@ public interface UserDAO {
     List<User> getUserList() throws Exception;
     void deleteUserByID(long id) throws Exception;
     void deleteUserByUsername(String username) throws Exception;
+    User getUser(String userIdentificationData) throws Exception;
 }

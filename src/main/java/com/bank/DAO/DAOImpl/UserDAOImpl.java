@@ -3,8 +3,9 @@ package com.bank.DAO.DAOImpl;
 import com.bank.DAO.UserDAO;
 import com.bank.entities.User;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -15,7 +16,9 @@ import java.util.List;
  */
 
 @Component(value = "userDAOImpl")
-public class UserDAOImpl extends HibernateDaoSupport implements UserDAO {
+public class UserDAOImpl implements UserDAO {
+
+    private SessionFactory sessionFactory;
 
     public void createUser(User user) throws Exception {
         Session session = getSessionFactory().openSession();
@@ -64,5 +67,34 @@ public class UserDAOImpl extends HibernateDaoSupport implements UserDAO {
         }
     }
 
+    public User getUser(String userIdentificationData) throws Exception {
+        Session session = getSessionFactory().openSession();
+        User userByUsername = (User) session.createCriteria(User.class).add(Restrictions.eq("username",userIdentificationData))
+                .uniqueResult();
+        User userByID = (User) session.load(User.class, Long.valueOf(userIdentificationData));
+        User user = null;
+        if (userByUsername != null) {
+            user = userByUsername;
+        }
+        if (userByID != null) {
+            user = userByID;
+        }
+        return user;
+    }
 
+    @Autowired
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
+    public SessionFactory getSessionFactory() {
+        return sessionFactory;
+    }
 }
+
+
+// sonarGraph
+// Robert Martin clean architecture
+// Screaming architecture Rob
+// Hexagonal architecture
+//

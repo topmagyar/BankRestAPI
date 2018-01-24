@@ -2,10 +2,10 @@ package com.bank.services;
 
 import com.bank.DAO.DAOImpl.UserDAOImpl;
 import com.bank.entities.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -20,7 +20,7 @@ import java.util.List;
 @Path("/user")
 public class UserService {
 
-    @Resource
+    @Autowired
     private UserDAOImpl userDAOImpl;
 
     @GET
@@ -62,6 +62,31 @@ public class UserService {
         response = Response.status(200).build();
         return response;
     }
+
+
+    @PUT
+    @Path("/update")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateUser(User user) throws Exception {
+        Response response = null;
+        return response;
+    }
+
+    @GET
+    @Path("/{userIdentificationData}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserByID(@PathParam("userIdentificationData") String userIdentificationData) throws Exception {
+        Response response = null;
+        User user = userDAOImpl.getUser(userIdentificationData);
+        if (user != null) {
+            response = Response.status(200).entity(user).build();
+        } else {
+            response = Response.status(400).build();
+        }
+        return response;
+    }
+
 
     @GET
     @Path("/check")
